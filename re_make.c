@@ -321,22 +321,27 @@ int getAction(int N_USER ,int N_GO) //Obtain the number of PLAYERs in the array 
 	
 }
 
-void printCard() // Show all the cards player have.
+void printCard(int PLAY_NUMBER, int cardcnt) // Show all the cards player have.
 {
-	
+	int i;
+	for(i=0;i<cardcnt;i++)
+	{	
+		offercards();
+		offercard();
+		Matching_the_card_number(cardhold[PLAY_NUMBER-1][i]); //Make sure player hand out the cards and match each shape and number.
+		Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]);	
+	}
+	return (Matching_the_card_number(cardhold[PLAY_NUMBER-1][i])Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]));
 }
+
 void printUserCardStatus(int user, int cardcnt) {
 	int i;
 	
 	printf("   -> card : ");
 	for (i=0;i<cardcnt;i++)
 		{
-		printCard(cardhold[user][i]);
-		
-		Matching_the_card_number(0); //the number of user array is '0'
-		Matching_the_card_shape(0);
-		
-	printf("\n ::: ");
+		printCard(user,cardcnt);
+	printf("\n ::: %c%d ",Matching_the_card_number(cardhold[PLAY_NUMBER-1][i]),Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]));
 }
 }
 
