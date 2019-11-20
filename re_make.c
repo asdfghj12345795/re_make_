@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N_CARDSET			17 // set the cardset to not consider the same situation.
+#define N_CARDSET			20 //Increase the card set to avoid duplication
 #define N_CARD				52
 #define N_DOLLAR			50
 
@@ -28,12 +28,19 @@ int Dollar[N_MAX_USER];
 int Round_B_price[N_MAX_GO][N_MAX_USER]; //The betting amount variable of the player in the field.
 int Player_Card[N_MAX_GO][N_MAX_USER]; // [i][j] : ith card of j player
 int Dealer_card[N_MAX_GO]; //[j] : jth card of dealer
-int cardhold[N_MAE_USER][N_MAX_GO];
+int cardcnt=0;
+
+int *card[N_CARDSET*N_CARD];
 
 //card tray object
-int CardTray[N_CARDSET*N_CARD];
-int cardIndex = 0;							
+int mixCardTray()
+{
+  int CardTray[N_CARDSET*N_CARD];
 
+}
+
+	
+					
 
 //player info
 int dollar[N_MAX_USER]={50,50,50,50,50};	//dollars that each player has
@@ -44,7 +51,7 @@ int dollar[N_MAX_USER]={50,50,50,50,50};	//dollars that each player has
 int cardhold[N_MAX_USER+1][N_MAX_CARDHOLD];	//cards that currently the players hold
 int cardSum[N_MAX_USER];					//sum of the cards
 int bet[N_MAX_USER];						//current betting 
-int gameEnd = 0; 							//game end flag
+							//game end flag
 
 //some utility functions
 
@@ -78,7 +85,7 @@ int Matching_the_card_number(int number_array) // decide the number (1~K,Q,J) of
 	
 	check = number_array%13;
 	
-	switch(chack){
+	switch(check){
 		
 		case 0:
 			number=1;
@@ -122,7 +129,7 @@ int Matching_the_card_number(int number_array) // decide the number (1~K,Q,J) of
 	
 		case 10:
 			number=11;
-			printf("KING");
+			printf("JACK");
 			break;
 
 		case 11:
@@ -132,7 +139,7 @@ int Matching_the_card_number(int number_array) // decide the number (1~K,Q,J) of
 
 		case 12:
 			number=13;
-			printf("JACK");
+			printf("KING");
 			break;
 			
 	}
@@ -176,16 +183,18 @@ int Matching_the_card_shape(int number_array)//decide the shape of card like ¢¾¢
 
 //card array controllers -------------------------------
 
+extern int cardcnt;
+
 //get one card from the tray
-int Card_Offer_player(int n, int Nofplayer)//Give the card each player.
+int Card_Offer_player(int cardcnt, int Nofplayer)//Give the card each player.
 {
-		int Player_Card[n+1][Nofplayer];
+		int Player_Card[cardcnt+1][Nofplayer];
 		
 		srand((unsigned)time(NULL));
-		Player_Card[n+1][Nofplayer] = rand()%52;
+		Player_Card[cardcnt+1][Nofplayer] = rand()%52;
 	
-			
-		return (Player_Card[n+1][Nofplayer]);//There are 17 cardsets and 17 n_max_go, so there is no need to ask for redundancy.
+		cardcnt++;	
+		return (Player_Card[cardcnt+1][Nofplayer]);//There are 17 cardsets and 17 n_max_go, so there is no need to ask for redundancy.
 
 }
 
@@ -277,6 +286,7 @@ int BETTING_SET() //Betting for play
 	printf("---------------------\n");	 
 }
 
+extern int cardcnt;
 
 //offering initial 2 cards
 void offerCards(void) {
@@ -284,21 +294,18 @@ void offerCards(void) {
 	//1. give two card for each players
 	for (i=0;i<PLAY_NUMBER;i++)
 	{
-		cardhold[i][0] = Card_Offer_player();
-		cardhold[i][1] = Card_Offer_player();
+		cardhold[i][0] = Card_Offer_player(cardcnt, i);
+		cardhold[i][1] = Card_Offer_player(cardcnt, i);
 	}
-	//2. give two card for the operator
-	cardhold[PLAY_NUMBER][0] = Card_Offer_player();
-	cardhold[PLAY_NUMBER][1] = Card_Offer_player();
+	//2. give two card for the dealer
+	cardhold[PLAY_NUMBER][0] = Card_Offer_player(cardcnt, PLAY_NUMBER); //the number of dealer array is Play_number.
+	cardhold[PLAY_NUMBER][1] = Card_Offer_player(cardcnt, PLAY_NUMBER);
 	
-	return;
+
+	
 }
 
-//print initial card status
-void printCardInitialStatus(void) {
-	
-	
-}
+extern int cardcnt;
 
 int getAction(int N_USER ,int N_GO) //Obtain the number of PLAYERs in the array and the number of cards as parameters 
  {
@@ -309,7 +316,7 @@ int getAction(int N_USER ,int N_GO) //Obtain the number of PLAYERs in the array 
 	
 	if(answer==0) // Give one more card to situations in which you want to get one more card.
 	{
-		cardhold[N_USER][N_GO] = Card_Offer_player();
+		cardhold[N_USER][N_GO] = Card_Offer_player(cardcnt,N_USER);
 	}
 	
 	else
@@ -317,48 +324,102 @@ int getAction(int N_USER ,int N_GO) //Obtain the number of PLAYERs in the array 
 		printUserCardStatus(N_USER, N_GO);
 	}
 	
-	return 0; 
-	
+	return 0;
+	 
 }
 
-void printCard(int PLAY_NUMBER, int cardcnt) // Show all the cards player have.
+int printCard(int PLAY_NUMBER, int cardcnt) // Show all the cards player have.
 {
 	int i;
 	for(i=0;i<cardcnt;i++)
 	{	
 		offercards();
-		offercard();
+		Card_Offer_player(cardcnt,i);
 		Matching_the_card_number(cardhold[PLAY_NUMBER-1][i]); //Make sure player hand out the cards and match each shape and number.
 		Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]);	
 	}
-	return (Matching_the_card_number(cardhold[PLAY_NUMBER-1][i])Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]));
+	return (Matching_the_card_number(cardhold[PLAY_NUMBER-1][i]),Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]));
 }
 
-void printUserCardStatus(int user, int cardcnt) {
+int printUserCardStatus(int user, int cardcnt) {
 	int i;
 	
 	printf("   -> card : ");
 	for (i=0;i<cardcnt;i++)
 		{
 		printCard(user,cardcnt);
-	printf("\n ::: %c%d ",Matching_the_card_number(cardhold[PLAY_NUMBER-1][i]),Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]));
+	printf("\n ::: %c%d ",Matching_the_card_number(cardhold[user][i]),Matching_the_card_shape(cardhold[user][i]));
+	}
 }
-}
 
+//print initial card status
+void printCardInitialStatus(int N_USER, int cardcnt) {
+	
+	printUserCardStatus(N_USER, cardcnt-1);
 
+} // In order to print out the status of the initial card distribution, you must print out the situation before you receive one card.
 
+extern int cardcnt;
 
 // calculate the card sum and see if : 1. under 21, 2. over 21, 3. blackjack
-int calcStepResult() {
+int calcStepResult(int cardhold[PLAY_NUMBER][cardcnt]) 
+{
+	int sum_player =0;
+	int sum_dealer =0;
+	int i;
+	int j;
 	
+	for(i=0;i<=cardcnt;i++)
+	{
+	sum_player += Matching_the_card_number(cardhold[PLAY_NUMBER-1][i]);
+	}
+	
+	for(j=0;j<=cardcnt;j++)
+	{
+		sum_dealer +=Matching_the_card_number(cardhold[PLAY_NUMBER][j]);
+	}
+	
+	if(sum_player<21) //The sum of all cards is less than 21.
+	{
+		printf("sum : %d", sum_player);
+		getAction(0,cardcnt);
+	}
+	
+	else if(sum_player>21) //In case of overflow and defeat, because the sum of all cards is greater than 21.
+	{
+		printf("%d / OVERFLOW >>> LOSE!\n", sum_player);
+	}
+	
+	else if(sum_player<sum_dealer) // a situation in which the sum of all cards is lost for reasons smaller than the sum of the cards in the dealer.
+	{
+		printf("%d / DEAD", sum_player);
+	}
+	
+	else if (sum_player==21) //a situation in which the sum of all cards is 21.
+		{
+		if(cardcnt==2)
+		{
+			printf("BLACKJACK!\n"); // a situation in which a blackjack (when two cards were received and 21 were received)		
+		}
+	
+		else
+		{
+			printf("winner\n"); //a situation in which three or more cards are received and all numbers are won by 21.
+	
+		}
 }
 
-int checkResult() {
-	
+		return 0;
 }
 
-int checkWinner() {
-	
+extern int cardcnt;
+
+//End turn and output final result of user.
+int checkResult(void)
+{
+	printUserCardStatus(0, cardcnt); //Use a function that represents the shape and number of cards you have currently
+	calcStepResult(cardhold[0][cardcnt]); //Use a function to get the sum of the numbers you have
+	return 0;
 }
 
 
@@ -366,49 +427,53 @@ int checkWinner() {
 int main(int argc, char *argv[]) {
 	int roundIndex = 0;
 	int max_user;
+	int cardcnt =0;
 	int i;
+	
+	
+	//Game initialization --------
+	//1. players' dollar
+	int dollar[N_MAX_USER]={50,50,50,50,50};
+	//2. card tray
+	mixCardTray();
 	
 	srand((unsigned)time(NULL));
 	
 	//set the number of players
 	PLAY_NUM();
-
-	
-	//Game initialization --------
-	//1. players' dollar
-	
-	//2. card tray
-	mixCardTray();
-
-
+	printf("\n");
 
 	//Game start --------
 	do {
+		printf("\n------------------ GAME start --------------------------\n");
 		
 		betDollar();
 		offerCards(); //1. give cards to all the players
+		printCardInitialStatus(0,cardcnt);
 		
-		printCardInitialStatus();
-		printf("\n------------------ GAME start --------------------------\n");
+		extern int cardcnt;
+		
+		for (i=1;i<PLAY_NUMBER;i++) //each player
+		{
+		
+		printf("\n");
 		
 		//each player's turn
-		for () //each player
-		{
-			while () //do until the player dies or player says stop
+		
+			while (getAction(0,cardcnt)) //do until the player dies or player says stop
 			{
-				//print current card status printUserCardStatus();
-				//check the card status ::: calcStepResult()
-				//GO? STOP? ::: getAction()
-				//check if the turn ends or not
+				printUserCardStatus(i,cardcnt) ; //print current card status printUserCardStatus();
+				printf("\n");
+				calcStepResult(cardhold[i][cardcnt]); //check the card status ::: calcStepResult() ~ check if the turn ends or not
+				printf("\n");
+				getAction(0,cardcnt);//GO? STOP? ::: getAction()
+				printf("\n");
+				cardcnt++;
 			}
 		}
 		
-		//result
 		checkResult();
 	} while (gameEnd == 0);
-	
-	checkWinner();
-	
 	
 	return 0;
 }
