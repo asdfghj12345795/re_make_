@@ -320,6 +320,10 @@ extern int cardcnt;
 int getAction(int N_USER ,int N_GO) //Obtain the number of PLAYERs in the array and the number of cards as parameters 
  {
 	int answer; // variable ro present to say the stay or go 
+	printf("\n");
+	
+	printf("----------my turn !--------------");
+	
 	
 	printf("::: Action ? (0 - go, others - stay) : ");
 	scanf("%d", &answer);
@@ -327,6 +331,7 @@ int getAction(int N_USER ,int N_GO) //Obtain the number of PLAYERs in the array 
 	if(answer==0) // Give one more card to situations in which you want to get one more card.
 	{
 		cardhold[N_USER][N_GO] = Card_Offer_player(cardcnt,N_USER);
+		printf("\n");
 	}
 	
 	else
@@ -354,11 +359,15 @@ int printCard(int PLAY_NUMBER, int cardcnt) // Show all the cards player have.
 int printUserCardStatus(int user, int cardcnt) {
 	int i;
 	
+	printf("----------CARD OFFERING-----------");
+	printf("\n");
 	printf("   -> card : ");
 	for (i=0;i<cardcnt;i++)
 		{
 		printCard(user,cardcnt);
 	printf("\n ::: %c%d ",Matching_the_card_number(cardhold[user][i]),Matching_the_card_shape(cardhold[user][i]));
+	printf("------------------------------------");
+	printf("\n");
 	}
 }
 
