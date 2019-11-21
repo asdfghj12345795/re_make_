@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 #define N_CARDSET			20 //Increase the card set to avoid duplication
 #define N_CARD				52
 #define N_DOLLAR			50
@@ -349,7 +350,7 @@ int printCard(int PLAY_NUMBER, int cardcnt) // Show all the cards player have.
 	int i;
 	for(i=0;i<cardcnt;i++)
 	{	
-		offercards();
+		offerCards();
 		Card_Offer_player(cardcnt,i);
 		Matching_the_card_number(cardhold[PLAY_NUMBER-1][i]); //Make sure player hand out the cards and match each shape and number.
 		Matching_the_card_shape(cardhold[PLAY_NUMBER-1][i]);	
@@ -382,7 +383,7 @@ void printCardInitialStatus(int N_USER, int cardcnt) {
 extern int cardcnt;
 
 // calculate the card sum and see if : 1. under 21, 2. over 21, 3. blackjack
-int calcStepResult(int cardhold[PLAY_NUMBER][cardcnt]) 
+int calcStepResult(int N_SER, int cardcnt) 
 {
 	int sum_player =0;
 	int sum_dealer =0;
@@ -438,7 +439,7 @@ extern int cardcnt;
 int checkResult(void)
 {
 	printUserCardStatus(0, cardcnt); //Use a function that represents the shape and number of cards you have currently
-	calcStepResult(cardhold[0][cardcnt]); //Use a function to get the sum of the numbers you have
+	calcStepResult(0,cardcnt); //Use a function to get the sum of the numbers you have
 
 }
 
@@ -467,7 +468,7 @@ int main(int argc, char *argv[]) {
 	do {
 		printf("\n------------------ GAME start --------------------------\n");
 		
-		betDollar();
+		BETTING_SET();
 		offerCards(); //1. give cards to all the players
 		printCardInitialStatus(0,cardcnt);
 		
@@ -484,7 +485,7 @@ int main(int argc, char *argv[]) {
 			{
 				printUserCardStatus(i,cardcnt) ; //print current card status printUserCardStatus();
 				printf("\n");
-				calcStepResult(cardhold[i][cardcnt]); //check the card status ::: calcStepResult() ~ check if the turn ends or not
+				calcStepResult(i, cardcnt); //check the card status ::: calcStepResult() ~ check if the turn ends or not
 				printf("\n");
 				getAction(0,cardcnt);//GO? STOP? ::: getAction()
 				printf("\n");
