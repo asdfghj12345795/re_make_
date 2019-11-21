@@ -128,18 +128,18 @@ int Matching_the_card_number(int number_array) // decide the number (1~K,Q,J) of
 			break;
 	
 		case 10:
-			number=11;
-			printf("JACK");
+			number=10;
+			printf("JACK(11)");
 			break;
 
 		case 11:
-			number=12;
-			printf("QUEEN");
+			number=10;
+			printf("QUEEN(12)");
 			break;
 
 		case 12:
-			number=13;
-			printf("KING");
+			number=10;
+			printf("KING(13)");
 			break;
 			
 	}
@@ -419,7 +419,7 @@ int checkResult(void)
 {
 	printUserCardStatus(0, cardcnt); //Use a function that represents the shape and number of cards you have currently
 	calcStepResult(cardhold[0][cardcnt]); //Use a function to get the sum of the numbers you have
-	return 0;
+
 }
 
 
