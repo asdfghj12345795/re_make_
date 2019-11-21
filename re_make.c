@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define N_CARDSET			20 //Increase the card set to avoid duplication
 #define N_CARD				52
