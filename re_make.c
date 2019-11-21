@@ -89,42 +89,52 @@ int Matching_the_card_number(int number_array) // decide the number (1~K,Q,J) of
 		
 		case 0:
 			number=1;
+			printf("%d", number);
 			break;
 		
 		case 1:
 			number=2;
+			printf("%d", number);
 			break;
 		
 		case 2:
 			number=3;
+			printf("%d", number);
 			break;
 		
 		case 3:
 			number=4;
+			printf("%d", number);
 			break;
 		
 		case 4:
 			number=5;
+			printf("%d", number);
 			break;
 
 		case 5:
 			number=6;
+			printf("%d", number);
 			break;
 
 		case 6:
 			number=7;
+			printf("%d", number);
 			break;
 
 		case 7:
 			number=8;
+			printf("%d", number);
 			break;
 
 		case 8:
 			number=9;
+			printf("%d", number);
 			break;
 
 		case 9:
 			number=10;
+			printf("%d", number);
 			break;
 	
 		case 10:
